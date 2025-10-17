@@ -14,10 +14,7 @@ import Leaderboard from "./pages/Leaderboard";
 import ChatAssistant from "./pages/ChatAssistant";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
-<<<<<<< HEAD
-=======
-import StudentQuiz from "./pages/StudentQuiz";
->>>>>>> c7de362 (Initial commit from cursor)
+import StudentQuiz from "./pages/StudentQuiz"; // fixed import
 
 const queryClient = new QueryClient();
 
@@ -51,10 +48,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/auth" element={<Auth />} />
-<<<<<<< HEAD
-=======
-          <Route path="/q/:code" element={<StudentQuiz />} />
->>>>>>> c7de362 (Initial commit from cursor)
+          <Route path="/q/:code" element={<StudentQuiz />} /> {/* fixed route */}
           <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
           <Route path="/lesson-planner" element={<ProtectedRoute><LessonPlanner /></ProtectedRoute>} />
           <Route path="/quiz-generator" element={<ProtectedRoute><QuizGenerator /></ProtectedRoute>} />
