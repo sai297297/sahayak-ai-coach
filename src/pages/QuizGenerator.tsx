@@ -1,16 +1,4 @@
 import Layout from "@/components/Layout";
-<<<<<<< HEAD
-
-const QuizGenerator = () => {
-  return (
-    <Layout>
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-          Quiz Generator
-          </h1>
-        <p className="text-muted-foreground mb-8">Create AI-powered quizzes and assessments</p>
-        <p className="text-center text-muted-foreground py-20">Coming soon...</p>
-=======
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -73,8 +61,6 @@ const QuizGenerator = () => {
     setError(null);
     setIsGenerating(true);
     try {
-      // Call edge function that already crafts prompt + schema
-      // If a lesson_plan_id is provided, fetch its details and pass as context
       let lessonPlanDetails: any = null;
       if (formData.lesson_plan_id) {
         const { data: lp } = await supabase.from("lesson_plans").select("*").eq("id", formData.lesson_plan_id).maybeSingle();
@@ -161,7 +147,6 @@ const QuizGenerator = () => {
             onSave={(draft) => createQuizMutation.mutate(draft)}
           />
         )}
->>>>>>> c7de362 (Initial commit from cursor)
       </div>
     </Layout>
   );

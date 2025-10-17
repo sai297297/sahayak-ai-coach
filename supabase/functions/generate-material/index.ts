@@ -9,11 +9,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-<<<<<<< HEAD
-    const { title, content_type, difficulty_level, topic } = await req.json();
-=======
     const { title, content_type, difficulty_level, topic, lesson_plan } = await req.json();
->>>>>>> c7de362 (Initial commit from cursor)
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
@@ -22,11 +18,7 @@ serve(async (req) => {
 
     const systemPrompt = `You are an expert in creating differentiated learning materials. Create content that is appropriately scaffolded for the specified difficulty level while maintaining engagement and educational value.`;
 
-<<<<<<< HEAD
-=======
     const lpContext = lesson_plan ? `\n\nUse the following lesson plan details as context and align the material with its objectives and topic.\n${typeof lesson_plan === "string" ? lesson_plan : JSON.stringify(lesson_plan)}` : "";
-
->>>>>>> c7de362 (Initial commit from cursor)
     const userPrompt = `Create ${content_type} material for:
 - Title: ${title}
 - Type: ${content_type}
@@ -39,11 +31,7 @@ Include:
 3. Clear instructions
 4. Suggested duration
 
-<<<<<<< HEAD
-Make it engaging and suitable for ${difficulty_level} learners.`;
-=======
 Make it engaging and suitable for ${difficulty_level} learners.${lpContext}`;
->>>>>>> c7de362 (Initial commit from cursor)
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

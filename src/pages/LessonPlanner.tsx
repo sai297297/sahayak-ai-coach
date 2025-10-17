@@ -1,26 +1,17 @@
-<<<<<<< HEAD
-import { useState } from "react";
-=======
 import { useEffect, useState } from "react";
->>>>>>> c7de362 (Initial commit from cursor)
 import Layout from "@/components/Layout";
 import LessonForm from "@/components/lesson-planner/LessonForm";
 import GeneratedPlanViewer from "@/components/lesson-planner/GeneratedPlanViewer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-<<<<<<< HEAD
-=======
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
->>>>>>> c7de362 (Initial commit from cursor)
 
 const LessonPlanner = () => {
   const [step, setStep] = useState<"form" | "generated">("form");
   const [generatedPlan, setGeneratedPlan] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-<<<<<<< HEAD
-=======
   const [myPlans, setMyPlans] = useState<any[]>([]);
   const [localPlans, setLocalPlans] = useState<any[]>([]);
 
@@ -131,7 +122,6 @@ const LessonPlanner = () => {
     refreshMyPlans();
     loadLocalPlans();
   }, []);
->>>>>>> c7de362 (Initial commit from cursor)
 
   const handleGeneratePlan = async (formData: any) => {
     setLoading(true);
@@ -142,29 +132,20 @@ const LessonPlanner = () => {
 
       if (error) throw error;
 
-<<<<<<< HEAD
-      setGeneratedPlan({ ...data, ...formData });
-      setStep("generated");
-      toast({ title: "Lesson plan generated successfully!" });
-=======
       const fullPlan = { ...data, ...formData };
       setGeneratedPlan(fullPlan);
       setStep("generated");
       toast({ title: "Lesson plan generated successfully!" });
 
-      // Auto-save the generated lesson plan to dashboard
       const user = await supabase.auth.getUser();
       if (!user.data.user) throw new Error("Not authenticated");
       const insertPayload = { ...fullPlan, user_id: user.data.user.id };
       const { error: saveError } = await supabase.from("lesson_plans").insert(insertPayload);
       if (saveError) throw saveError;
       toast({ title: "Lesson plan saved to your dashboard." });
-      
-      // Auto-save to user's device (download) and local list
       downloadLessonPlan(fullPlan);
       storeLocalLessonPlan(fullPlan);
       refreshMyPlans();
->>>>>>> c7de362 (Initial commit from cursor)
     } catch (error: any) {
       toast({
         title: "Error",
@@ -191,12 +172,8 @@ const LessonPlanner = () => {
       toast({ title: "Lesson plan saved successfully!" });
       setStep("form");
       setGeneratedPlan(null);
-<<<<<<< HEAD
-=======
-      // Update lists after manual save
       refreshMyPlans();
       storeLocalLessonPlan(plan);
->>>>>>> c7de362 (Initial commit from cursor)
     } catch (error: any) {
       toast({
         title: "Error",
@@ -223,8 +200,6 @@ const LessonPlanner = () => {
         ) : (
           <GeneratedPlanViewer plan={generatedPlan} onSave={handleSavePlan} onBack={() => setStep("form")} />
         )}
-<<<<<<< HEAD
-=======
 
         <div className="grid gap-6 md:grid-cols-2 mt-8">
           <Card>
@@ -269,7 +244,6 @@ const LessonPlanner = () => {
             </CardContent>
           </Card>
         </div>
->>>>>>> c7de362 (Initial commit from cursor)
       </div>
     </Layout>
   );
