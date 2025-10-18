@@ -20,6 +20,7 @@ type Descriptive = {
 };
 
 type QuizDraft = {
+  id?: string;
   title: string;
   subject: string;
   grade_level: string;

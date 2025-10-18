@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 type Quiz = {
   id: string;
@@ -14,10 +15,12 @@ type Quiz = {
   is_published: boolean | null;
 };
 
-export function QuizList({ quizzes, isLoading, onCreateNew }: {
+export function QuizList({ quizzes, isLoading, onCreateNew, onEdit, onTogglePublish }: {
   quizzes: Quiz[] | undefined;
   isLoading: boolean;
   onCreateNew: () => void;
+  onEdit: (quiz: Quiz) => void;
+  onTogglePublish: (quiz: Quiz) => void;
 }) {
   if (isLoading) {
     return (
@@ -73,6 +76,29 @@ export function QuizList({ quizzes, isLoading, onCreateNew }: {
             <div className="flex items-center justify-between">
               <span>Duration: {quiz.duration ?? 0} min</span>
               <span>Total Points: {quiz.total_points ?? 0}</span>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <Button variant="outline" size="sm" onClick={() => onEdit(quiz)}>Edit</Button>
+              <Button size="sm" onClick={() => onTogglePublish(quiz)}>
+                {quiz.is_published ? "Unpublish" : "Publish"}
+              </Button>
+              {quiz.is_published && quiz.quiz_code ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const origin = window.location.origin;
+                    const url = `${origin}/q/${quiz.quiz_code}`;
+                    navigator.clipboard.writeText(url).then(() => {
+                      toast.success("Link copied", { description: url });
+                    }).catch(() => {
+                      toast.error("Failed to copy link");
+                    });
+                  }}
+                >
+                  Copy Link
+                </Button>
+              ) : null}
             </div>
           </CardContent>
         </Card>

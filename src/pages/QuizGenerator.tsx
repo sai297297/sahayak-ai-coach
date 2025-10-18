@@ -57,6 +57,26 @@ const QuizGenerator = () => {
     }
   });
 
+  const updateQuizMutation = useMutation({
+    mutationFn: async (quiz: any) => {
+      if (!quiz.id) throw new Error("Missing quiz id for update");
+      const { id, ...rest } = quiz;
+      const { data, error } = await supabase
+        .from("quizzes")
+        .update(rest)
+        .eq("id", id)
+        .select("*")
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["quizzes"] });
+      setStep("list");
+      setGeneratedQuiz(null);
+    }
+  });
+
   async function handleGenerateQuiz(formData: any) {
     setError(null);
     setIsGenerating(true);
@@ -100,6 +120,16 @@ const QuizGenerator = () => {
     }
   }
 
+  function handleEditQuiz(quiz: any) {
+    setGeneratedQuiz(quiz);
+    setStep("editor");
+  }
+
+  function handleTogglePublish(quiz: any) {
+    const next = { ...quiz, is_published: !quiz.is_published };
+    updateQuizMutation.mutate(next);
+  }
+
   return (
     <Layout>
       <div className="max-w-6xl mx-auto">
@@ -127,7 +157,13 @@ const QuizGenerator = () => {
         ) : null}
 
         {step === "list" && (
-          <QuizList quizzes={quizzesQuery.data} isLoading={quizzesQuery.isLoading} onCreateNew={() => setStep("form")} />
+          <QuizList
+            quizzes={quizzesQuery.data}
+            isLoading={quizzesQuery.isLoading}
+            onCreateNew={() => setStep("form")}
+            onEdit={handleEditQuiz}
+            onTogglePublish={handleTogglePublish}
+          />
         )}
 
         {step === "form" && (
@@ -142,9 +178,15 @@ const QuizGenerator = () => {
         {step === "editor" && generatedQuiz && (
           <QuizEditor
             quiz={generatedQuiz}
-            isSaving={createQuizMutation.isPending}
+            isSaving={createQuizMutation.isPending || updateQuizMutation.isPending}
             onCancel={() => setStep("list")}
-            onSave={(draft) => createQuizMutation.mutate(draft)}
+            onSave={(draft) => {
+              if (draft.id) {
+                updateQuizMutation.mutate(draft);
+              } else {
+                createQuizMutation.mutate(draft);
+              }
+            }}
           />
         )}
       </div>
